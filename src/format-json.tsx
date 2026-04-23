@@ -30,58 +30,58 @@ const OPERATIONS: Array<{
   hint: string;
 }> = [
   {
-    title: "格式化",
+    title: "Format",
     value: "format",
     icon: Icon.Text,
-    hint: "美化 JSON，适合阅读和编辑。",
+    hint: "Pretty-print JSON for reading and editing.",
   },
   {
-    title: "压缩",
+    title: "Minify",
     value: "minify",
     icon: Icon.MinusCircle,
-    hint: "移除空白字符，输出单行 JSON。",
+    hint: "Remove whitespace and output single-line JSON.",
   },
   {
-    title: "JSON 修复",
+    title: "Repair JSON",
     value: "repair",
     icon: Icon.BandAid,
-    hint: "尝试修复注释、尾逗号、未加引号 key、单引号字符串。",
+    hint: "Repair comments, trailing commas, unquoted keys, and single quotes.",
   },
   {
-    title: "转义",
+    title: "Escape",
     value: "escape",
     icon: Icon.Code,
-    hint: "把当前文本转换为 JSON 字符串字面量。",
+    hint: "Convert the current text to a JSON string literal.",
   },
   {
-    title: "反转义",
+    title: "Unescape",
     value: "unescape",
     icon: Icon.CodeBlock,
-    hint: "把 JSON 字符串字面量还原为普通文本或 JSON。",
+    hint: "Convert a JSON string literal back to text or JSON.",
   },
   {
-    title: "Unicode 编码",
+    title: "Encode Unicode",
     value: "unicode-escape",
     icon: Icon.Globe,
-    hint: "把非 ASCII 字符转换为 \\uXXXX。",
+    hint: "Convert non-ASCII characters to \\uXXXX.",
   },
   {
-    title: "Unicode 解码",
+    title: "Decode Unicode",
     value: "unicode-unescape",
     icon: Icon.Globe,
-    hint: "把 \\uXXXX 转回可读字符。",
+    hint: "Convert \\uXXXX sequences back to readable characters.",
   },
   {
     title: "Schema",
     value: "schema",
     icon: Icon.Document,
-    hint: "根据当前 JSON 推断基础 JSON Schema。",
+    hint: "Infer a basic JSON Schema from the current JSON.",
   },
   {
-    title: "Path 查询",
+    title: "JSONPath Query",
     value: "path",
     icon: Icon.MagnifyingGlass,
-    hint: "输入 user.name 或 items[0] 查询 JSON 片段。",
+    hint: "Query JSON fragments with user.name or items[0].",
   },
 ];
 
@@ -251,11 +251,11 @@ export default function Command() {
     >
       <Form.Description
         title="JSON Studio"
-        text={`${activeOperation?.title ?? "JSON"} · ${activeOperation?.hint ?? ""} · ⌘⇧V 打开 JSON 剪贴板历史`}
+        text={`${activeOperation?.title ?? "JSON"} · ${activeOperation?.hint ?? ""} · ⌘⇧V Open JSON Clipboard History`}
       />
       <Form.Dropdown
         id="clipboardHistory"
-        title="剪贴板"
+        title="Clipboard"
         value=""
         onChange={(value) => {
           if (value === "clipboard-history") {
@@ -264,19 +264,19 @@ export default function Command() {
         }}
       >
         <Form.Dropdown.Item
-          title="JSON 剪贴板历史"
+          title="JSON Clipboard History"
           value="clipboard-history"
           icon={tintedIcon(Icon.Clock, 1)}
         />
         <Form.Dropdown.Item
-          title="打开最近 6 条 JSON"
+          title="Open Recent 6 JSON Items"
           value=""
           icon={tintedIcon(Icon.Bolt, 0)}
         />
       </Form.Dropdown>
       <Form.Dropdown
         id="operation"
-        title="工具"
+        title="Tool"
         value={operation}
         onChange={(value) => setOperation(value as JsonOperation)}
       >
@@ -291,14 +291,14 @@ export default function Command() {
       </Form.Dropdown>
       <Form.Dropdown
         id="indent"
-        title="缩进"
+        title="Indent"
         value={String(indent)}
         onChange={(value) => setIndent(Number(value))}
       >
         {INDENT_OPTIONS.map((spaces) => (
           <Form.Dropdown.Item
             key={spaces}
-            title={`${spaces} 空格`}
+            title={`${spaces} spaces`}
             value={String(spaces)}
             icon={tintedIcon(Icon.TextCursor, spaces)}
           />
@@ -306,14 +306,14 @@ export default function Command() {
       </Form.Dropdown>
       <Form.Checkbox
         id="sortKeys"
-        label="键排序"
+        label="Sort Keys"
         value={sortKeys}
         onChange={setSortKeys}
       />
       <Form.Separator />
       <Form.TextArea
         id="content"
-        title={`JSON · ${activeOperation?.title ?? "编辑"}`}
+        title={`JSON · ${activeOperation?.title ?? "Edit"}`}
         value={content}
         onChange={(value) => {
           setContent(value);
@@ -321,7 +321,7 @@ export default function Command() {
           setError(undefined);
           setStatus(
             value.trim()
-              ? "已编辑，选择工具执行转换。"
+              ? "Edited. Choose a tool to transform."
               : "Paste JSON to begin.",
           );
         }}
@@ -329,10 +329,10 @@ export default function Command() {
         error={error}
       />
       <Form.Description
-        title="状态"
-        text={`${status} · 来源 ${source} · 缩进 ${indent} · 键排序 ${
-          sortKeys ? "开" : "关"
-        }${operation === "path" ? ` · Path ${path || "未选择"}` : ""}`}
+        title="Status"
+        text={`${status} · Source ${source} · Indent ${indent} · Sort keys ${
+          sortKeys ? "on" : "off"
+        }${operation === "path" ? ` · Path ${path || "not selected"}` : ""}`}
       />
     </Form>
   );
@@ -356,25 +356,25 @@ function WorkbenchActions(props: {
   return (
     <ActionPanel>
       <Action
-        title="执行当前工具"
+        title="Run Current Tool"
         icon={tintedIcon(Icon.Bolt, 1)}
         onAction={() => props.runOperation(props.operation)}
         shortcut={{ modifiers: ["cmd"], key: "return" }}
       />
       <Action
-        title="格式化"
+        title="Format"
         icon={tintedIcon(Icon.Text, 0)}
         onAction={() => props.runOperation("format")}
         shortcut={{ modifiers: ["cmd"], key: "f" }}
       />
       <Action
-        title="压缩"
+        title="Minify"
         icon={tintedIcon(Icon.MinusCircle, 1)}
         onAction={() => props.runOperation("minify")}
         shortcut={{ modifiers: ["cmd"], key: "m" }}
       />
       <Action
-        title="JSON 修复"
+        title="Repair JSON"
         icon={tintedIcon(Icon.BandAid, 2)}
         onAction={() => props.runOperation("repair")}
         shortcut={{ modifiers: ["cmd"], key: "j" }}
@@ -382,7 +382,9 @@ function WorkbenchActions(props: {
       {props.primaryOperation ? (
         <Action
           title={
-            props.primaryOperation === "path" ? "打开 Path 查询" : "使用此工具"
+            props.primaryOperation === "path"
+              ? "Open JSONPath Query"
+              : "Use This Tool"
           }
           icon={tintedIcon(Icon.Checkmark, 1)}
           onAction={() => {
@@ -396,31 +398,31 @@ function WorkbenchActions(props: {
         />
       ) : null}
       <Action
-        title="复制内容"
+        title="Copy Content"
         icon={tintedIcon(Icon.Clipboard, 0)}
         onAction={props.copyContent}
         shortcut={{ modifiers: ["cmd"], key: "c" }}
       />
       <Action.Push
-        title="带行号预览"
+        title="Preview with Line Numbers"
         icon={tintedIcon(Icon.Eye, 2)}
-        target={<CodePreview title="JSON 预览" content={props.content} />}
+        target={<CodePreview title="JSON Preview" content={props.content} />}
         shortcut={{ modifiers: ["cmd"], key: "l" }}
       />
       <Action
-        title="重新读取选中内容或剪贴板"
+        title="Reload Selection or Clipboard"
         icon={tintedIcon(Icon.Download, 0)}
         onAction={props.reloadInput}
         shortcut={{ modifiers: ["cmd"], key: "r" }}
       />
       <Action
-        title="JSON 剪贴板历史"
+        title="JSON Clipboard History"
         icon={tintedIcon(Icon.Clock, 1)}
         onAction={props.openClipboardHistory}
         shortcut={{ modifiers: ["cmd", "shift"], key: "v" }}
       />
 
-      <ActionPanel.Section title="工具">
+      <ActionPanel.Section title="Tools">
         {OPERATIONS.map((item, index) => (
           <Action
             key={item.value}
@@ -438,17 +440,17 @@ function WorkbenchActions(props: {
         ))}
       </ActionPanel.Section>
 
-      <ActionPanel.Section title="参数">
+      <ActionPanel.Section title="Options">
         {INDENT_OPTIONS.map((spaces) => (
           <Action
             key={spaces}
-            title={`缩进 ${spaces} 空格`}
+            title={`Indent ${spaces} Spaces`}
             icon={props.indent === spaces ? Icon.Checkmark : Icon.BlankDocument}
             onAction={() => props.setIndent(spaces)}
           />
         ))}
         <Action
-          title={props.sortKeys ? "关闭键排序" : "开启键排序"}
+          title={props.sortKeys ? "Disable Sort Keys" : "Enable Sort Keys"}
           icon={props.sortKeys ? Icon.XMarkCircle : Icon.Checkmark}
           onAction={() => props.setSortKeys(!props.sortKeys)}
         />
@@ -456,7 +458,7 @@ function WorkbenchActions(props: {
 
       {props.error ? (
         <Action.CopyToClipboard
-          title="复制错误信息"
+          title="Copy Error Message"
           content={props.error}
           shortcut={{ modifiers: ["cmd", "shift"], key: "c" }}
         />
@@ -496,8 +498,8 @@ function PathQueryView(props: {
     if (!path || !output || error) {
       await showToast({
         style: Toast.Style.Failure,
-        title: "Path 查询失败",
-        message: error ?? "请输入 JSONPath。",
+        title: "JSONPath Query Failed",
+        message: error ?? "Enter a JSONPath.",
       });
       return;
     }
@@ -505,7 +507,7 @@ function PathQueryView(props: {
     props.onApplyResult(path, output);
     await showToast({
       style: Toast.Style.Success,
-      title: `已应用 Path: ${path}`,
+      title: `Applied Path: ${path}`,
     });
     props.onClose();
   }
@@ -514,29 +516,32 @@ function PathQueryView(props: {
     if (!output || error) {
       await showToast({
         style: Toast.Style.Failure,
-        title: "Path 查询失败",
+        title: "JSONPath Query Failed",
         message: error,
       });
       return;
     }
 
     await Clipboard.copy(output);
-    await showToast({ style: Toast.Style.Success, title: "已复制查询结果" });
+    await showToast({
+      style: Toast.Style.Success,
+      title: "Copied Query Result",
+    });
   }
 
   return (
     <List
       isShowingDetail
-      navigationTitle="JSONPath 查询"
-      searchBarPlaceholder="输入 JSONPath，例如 nav_menu.home.href"
+      navigationTitle="JSONPath Query"
+      searchBarPlaceholder="Enter JSONPath, for example nav_menu.home.href"
       searchText={searchText}
       onSearchTextChange={setSearchText}
     >
-      <List.Section title="当前输入">
+      <List.Section title="Current Input">
         <List.Item
           id="current-input"
-          title={currentPath || "输入 JSONPath"}
-          subtitle={currentResult.error ?? "使用当前输入查询"}
+          title={currentPath || "Enter JSONPath"}
+          subtitle={currentResult.error ?? "Query with current input"}
           icon={tintedIcon(Icon.MagnifyingGlass, 0)}
           detail={
             <PathDetail
@@ -561,7 +566,7 @@ function PathQueryView(props: {
           }
         />
       </List.Section>
-      <List.Section title="智能补全">
+      <List.Section title="Suggestions">
         {visibleSuggestions.map((suggestion, index) => {
           const suggestionResult = buildPathResult(
             jsonText,
@@ -620,16 +625,16 @@ function PathDetail(props: {
         <List.Item.Detail.Metadata>
           <List.Item.Detail.Metadata.Label
             title="JSONPath"
-            text={props.path || "未输入"}
+            text={props.path || "Not entered"}
           />
           <List.Item.Detail.Metadata.Label
-            title="补全"
-            text={`${props.suggestionsCount} 个路径`}
+            title="Suggestions"
+            text={`${props.suggestionsCount} paths`}
           />
           <List.Item.Detail.Metadata.Separator />
           <List.Item.Detail.Metadata.Label
-            title="提示"
-            text="不用输入 $ 前缀"
+            title="Tip"
+            text="No $ prefix required"
           />
         </List.Item.Detail.Metadata>
       }
@@ -650,7 +655,7 @@ function PathResultActions(props: {
   return (
     <ActionPanel>
       <Action
-        title="应用查询结果到主编辑器"
+        title="Apply Query Result to Main Editor"
         icon={tintedIcon(Icon.Checkmark, 1)}
         onAction={() =>
           props.applyResult(props.path, props.output, props.error)
@@ -658,25 +663,25 @@ function PathResultActions(props: {
         shortcut={{ modifiers: ["cmd"], key: "return" }}
       />
       <Action
-        title="复制查询结果"
+        title="Copy Query Result"
         icon={tintedIcon(Icon.Clipboard, 0)}
         onAction={() => props.copyResult(props.output, props.error)}
         shortcut={{ modifiers: ["cmd"], key: "c" }}
       />
-      <Action.Paste title="粘贴查询结果" content={props.output} />
-      <Action.CopyToClipboard title="复制 JSONPath" content={props.path} />
+      <Action.Paste title="Paste Query Result" content={props.output} />
+      <Action.CopyToClipboard title="Copy JSONPath" content={props.path} />
       <Action.Push
-        title="预览完整 JSON"
+        title="Preview Full JSON"
         icon={tintedIcon(Icon.Eye, 2)}
-        target={<CodePreview title="完整 JSON" content={props.jsonText} />}
+        target={<CodePreview title="Full JSON" content={props.jsonText} />}
       />
       <Action.Push
-        title="预览查询结果"
+        title="Preview Query Result"
         icon={tintedIcon(Icon.Eye, 1)}
-        target={<CodePreview title="查询结果" content={props.output} />}
+        target={<CodePreview title="Query Result" content={props.output} />}
       />
       <Action
-        title="格式化完整 JSON"
+        title="Format Full JSON"
         icon={tintedIcon(Icon.Text, 0)}
         onAction={() =>
           props.setJsonText(formatJsonReference(props.jsonText, 2))
@@ -684,13 +689,16 @@ function PathResultActions(props: {
         shortcut={{ modifiers: ["cmd"], key: "f" }}
       />
       <Action
-        title="返回工具箱"
+        title="Back to Workbench"
         icon={Icon.ArrowLeft}
         onAction={props.onClose}
         shortcut={{ modifiers: ["cmd"], key: "." }}
       />
       {props.error ? (
-        <Action.CopyToClipboard title="复制错误信息" content={props.error} />
+        <Action.CopyToClipboard
+          title="Copy Error Message"
+          content={props.error}
+        />
       ) : null}
     </ActionPanel>
   );
@@ -705,14 +713,14 @@ function buildPathDetailMarkdown(props: {
   const fullJson = formatJsonReference(props.jsonText, 2);
 
   if (!props.path) {
-    return `# JSONPath 查询\n\n输入路径后，左侧会立即显示可选补全。\n\n## 完整 JSON\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(fullJson))}\n\`\`\``;
+    return `# JSONPath Query\n\nEnter a path to see matching suggestions on the left.\n\n## Full JSON\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(fullJson))}\n\`\`\``;
   }
 
   if (props.error) {
-    return `# ${props.path}\n\n## 查询错误\n\n\`\`\`text\n${escapeCodeFence(props.error)}\n\`\`\`\n\n## 完整 JSON\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(fullJson))}\n\`\`\``;
+    return `# ${props.path}\n\n## Query Error\n\n\`\`\`text\n${escapeCodeFence(props.error)}\n\`\`\`\n\n## Full JSON\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(fullJson))}\n\`\`\``;
   }
 
-  return `# ${props.path}\n\n## 查询结果\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(props.output))}\n\`\`\`\n\n## 完整 JSON\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(fullJson))}\n\`\`\``;
+  return `# ${props.path}\n\n## Query Result\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(props.output))}\n\`\`\`\n\n## Full JSON\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(fullJson))}\n\`\`\``;
 }
 
 function ClipboardHistoryView(props: {
@@ -738,7 +746,7 @@ function ClipboardHistoryView(props: {
     setIsLoading(false);
     await showToast({
       style: Toast.Style.Success,
-      title: "已刷新剪贴板历史",
+      title: "Clipboard History Refreshed",
     });
   }
 
@@ -746,22 +754,22 @@ function ClipboardHistoryView(props: {
     <List
       isLoading={isLoading}
       isShowingDetail
-      navigationTitle="JSON 剪贴板历史"
-      searchBarPlaceholder="搜索最近 6 条 Raycast 剪贴板 JSON"
+      navigationTitle="JSON Clipboard History"
+      searchBarPlaceholder="Search the most recent 6 Raycast clipboard JSON entries"
     >
       <List.EmptyView
-        title="没有找到 JSON"
-        description="Raycast API 只能读取最近 6 条剪贴板历史；复制 JSON 后再刷新试试。"
+        title="No JSON Found"
+        description="Raycast API can only read the 6 most recent clipboard history entries. Copy JSON and refresh again."
         icon={tintedIcon(Icon.Clock, 1)}
         actions={
           <ActionPanel>
             <Action
-              title="刷新"
+              title="Refresh"
               icon={Icon.ArrowClockwise}
               onAction={refresh}
             />
             <Action
-              title="返回工具箱"
+              title="Back to Workbench"
               icon={Icon.ArrowLeft}
               onAction={props.onClose}
             />
@@ -771,13 +779,13 @@ function ClipboardHistoryView(props: {
       {items.map((item, index) => (
         <List.Item
           key={`${item.offset}-${item.preview}`}
-          title={`历史 #${item.offset}`}
+          title={`History #${item.offset}`}
           subtitle={item.preview}
           icon={tintedIcon(Icon.Clipboard, index)}
           accessories={[{ text: item.summary }]}
           detail={
             <List.Item.Detail
-              markdown={`# 剪贴板历史 #${item.offset}\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(formatJsonReference(item.text, 2)))}\n\`\`\``}
+              markdown={`# Clipboard History #${item.offset}\n\n\`\`\`json\n${escapeCodeFence(addLineNumbers(formatJsonReference(item.text, 2)))}\n\`\`\``}
               metadata={
                 <List.Item.Detail.Metadata>
                   <List.Item.Detail.Metadata.Label
@@ -785,12 +793,12 @@ function ClipboardHistoryView(props: {
                     text={String(item.offset)}
                   />
                   <List.Item.Detail.Metadata.Label
-                    title="摘要"
+                    title="Summary"
                     text={item.summary}
                   />
                   <List.Item.Detail.Metadata.Separator />
                   <List.Item.Detail.Metadata.Label
-                    title="来源"
+                    title="Source"
                     text="Raycast Clipboard History"
                   />
                 </List.Item.Detail.Metadata>
@@ -800,31 +808,31 @@ function ClipboardHistoryView(props: {
           actions={
             <ActionPanel>
               <Action
-                title="使用此 JSON"
+                title="Use This JSON"
                 icon={tintedIcon(Icon.Checkmark, index)}
                 onAction={() => props.onSelect(item.text, item.offset)}
                 shortcut={{ modifiers: ["cmd"], key: "return" }}
               />
               <Action
-                title="使用格式化 JSON"
+                title="Use Formatted JSON"
                 icon={tintedIcon(Icon.Text, index)}
                 onAction={() =>
                   props.onSelect(formatJsonReference(item.text, 2), item.offset)
                 }
               />
               <Action.CopyToClipboard
-                title="复制此 JSON"
+                title="Copy This JSON"
                 content={item.text}
                 shortcut={{ modifiers: ["cmd"], key: "c" }}
               />
               <Action
-                title="刷新"
+                title="Refresh"
                 icon={Icon.ArrowClockwise}
                 onAction={refresh}
                 shortcut={{ modifiers: ["cmd"], key: "r" }}
               />
               <Action
-                title="返回工具箱"
+                title="Back to Workbench"
                 icon={Icon.ArrowLeft}
                 onAction={props.onClose}
                 shortcut={{ modifiers: ["cmd"], key: "." }}
@@ -845,7 +853,7 @@ function CodePreview(props: { title: string; content: string }) {
       actions={
         <ActionPanel>
           <Action.CopyToClipboard
-            title="复制原始内容"
+            title="Copy Raw Content"
             content={props.content}
             shortcut={{ modifiers: ["cmd"], key: "c" }}
           />
@@ -958,7 +966,7 @@ function buildPathResult(input: string, path: string, indent: number) {
   if (!path) {
     return {
       output: "",
-      error: "输入字段名或从补全列表选择一个 Path。",
+      error: "Type a field name or choose a path from suggestions.",
     };
   }
 
